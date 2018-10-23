@@ -1,6 +1,9 @@
 import numpy as np
-import scipy as sp
+import scipy.spatial.distance as sp
 import pandas as pd
+
+def getNumpyArrayFromCSV(nameOfFile):
+    return np.array(pd.read_csv(nameOfFile, header=None))
 
 class KNN:
     def __init__(self, k, trainList):
@@ -8,5 +11,11 @@ class KNN:
         self.trainListData=np.array(trainList)[:,0:4]
         self.trainListLabels=np.array(trainList)[:,4]
 
+    def predict(self, testListData):
+        for a in testListData:
+            for b in self.trainListData:
+                    print(sp.euclidean(a,b))
+
 
 kNN = KNN(3, pd.read_csv("iris.data.learning", header=None))
+kNN.predict(getNumpyArrayFromCSV("iris.data.learning")[:,0:4])
