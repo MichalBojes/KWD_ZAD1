@@ -1,1 +1,12 @@
-print("init")
+import numpy as np
+import scipy as sp
+import pandas as pd
+
+class KNN:
+    def __init__(self, k, trainList):
+        self.k=k
+        self.trainListData=np.array(trainList)[:,0:4]
+        self.trainListLabels=np.array(trainList)[:,4]
+
+
+kNN = KNN(3, pd.read_csv("iris.data.learning", header=None))
