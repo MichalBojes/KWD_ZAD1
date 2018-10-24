@@ -8,14 +8,19 @@ def getNumpyArrayFromCSV(nameOfFile):
 class KNN:
     def __init__(self, k, trainList):
         self.k=k
+        self.trainList=np.array(trainList)
         self.trainListData=np.array(trainList)[:,0:4]
         self.trainListLabels=np.array(trainList)[:,4]
 
     def predict(self, testListData):
-        for a in testListData:
-            for b in self.trainListData:
-                    print(sp.euclidean(a,b))
+        self.distance= np.empty([len(testListData), len(self.trainList)], dtype=object)
+        for test in range (0, len(testListData), 1):
+            for trained in range (0, len(self.trainList), 1):
+                self.distance[test][trained]= sp.euclidean(testListData[test], self.trainList[trained, 0:4]), self.trainList[trained, 4]
+            np.sort(self.distance[test])
 
-
-kNN = KNN(3, pd.read_csv("iris.data.learning", header=None))
+            #for i in range (self.k):
+               # print(self.distance[test][i])
+        print(self.distance)
+kNN = KNN(1, pd.read_csv("iris.data.learning", header=None))
 kNN.predict(getNumpyArrayFromCSV("iris.data.learning")[:,0:4])
