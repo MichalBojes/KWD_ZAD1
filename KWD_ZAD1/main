@@ -1,12 +1,40 @@
+from typing import Dict, Any
+
 import numpy as np
-import scipy as sp
+import scipy.spatial.distance as sp
 import pandas as pd
 
+def getNumpyArrayFromCSV(nameOfFile):
+    return np.array(pd.read_csv(nameOfFile, header=None))
+
 class KNN:
+
     def __init__(self, k, trainList):
         self.k=k
-        self.trainListData=np.array(trainList)[:,0:4]
-        self.trainListLabels=np.array(trainList)[:,4]
+        self.trainList=np.array(trainList)
 
+    def predict(self, testListData):
+        self.score= list()
+        self.distance= np.empty([len(testListData), len(self.trainList)], dtype=[('dist', float), ('label', 'S30')])
+        for test in range (0, len(testListData), 1):
+            print("Punkt: %d" %test)
+            for trained in range (0, len(self.trainList), 1):
+                self.distance[test][trained]=sp.euclidean(testListData[test], self.trainList[trained, 0:4]), self.trainList[trained, 4]
+            self.tosort=np.array(self.distance[test], dtype=[('dist', float), ('label', 'S30'),])
+            self.tosort.sort(order='dist')
+            self.thisdict = {}
+            for i in range (self.k):
+                self.tuple=self.tosort[i]
+                if self.tuple[1] not in self.thisdict:
+                    self.thisdict[self.tuple[1]]=1
+                else:
+                    self.thisdict[self.tuple[1]]+=1
+            self.sorteddict=sorted(self.thisdict, key=self.thisdict.__getitem__, reverse=True)
+            print(self.sorteddict[0])
+            self.score.append(self.sorteddict[0])
+            self.sorteddict.clear()
+            self.thisdict.clear()
+        return(self.score)
 
-kNN = KNN(3, pd.read_csv("iris.data.learning", header=None))
+kNN = KNN(5, pd.read_csv("iris.data.learning", header=None))
+kNN.predict(getNumpyArrayFromCSV("iris.data.test")[:,0:4])
