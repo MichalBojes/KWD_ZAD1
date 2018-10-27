@@ -1,5 +1,3 @@
-from typing import Dict, Any
-
 import numpy as np
 import scipy.spatial.distance as sp
 import pandas as pd
@@ -15,12 +13,12 @@ class KNN:
 
     def predict(self, testListData):
         self.score= list()
-        self.distance= np.empty([len(testListData), len(self.trainList)], dtype=[('dist', float), ('label', 'S30')])
+        self.distance= np.empty([len(testListData), len(self.trainList)], dtype=[('dist', float), ('label', 'U30')])
         for test in range (0, len(testListData), 1):
             print("Punkt: %d" %test)
             for trained in range (0, len(self.trainList), 1):
                 self.distance[test][trained]=sp.euclidean(testListData[test], self.trainList[trained, 0:4]), self.trainList[trained, 4]
-            self.tosort=np.array(self.distance[test], dtype=[('dist', float), ('label', 'S30'),])
+            self.tosort=np.array(self.distance[test], dtype=[('dist', float), ('label', 'U30'),])
             self.tosort.sort(order='dist')
             self.thisdict = {}
             for i in range (self.k):
@@ -36,5 +34,18 @@ class KNN:
             self.thisdict.clear()
         return(self.score)
 
-kNN = KNN(5, pd.read_csv("iris.data.learning", header=None))
-kNN.predict(getNumpyArrayFromCSV("iris.data.test")[:,0:4])
+    def score(self,test_list_data, predicted_labels_list):
+        self.correctly=0
+        self.labels=self.predict(test_list_data)
+        for i in range (0,len(self.labels),1):
+            if self.labels[i]==predicted_labels_list[i]:
+                self.correctly+=1
+        self.procentage=self.correctly/len(predicted_labels_list)*100
+        print("poprawnie rozpoznano (sztuk): %d na %d" % (self.correctly, len(predicted_labels_list)))
+        print("poprawnie rozpoznano (w procentach): %d" %self.procentage )
+        return self.procentage
+
+kNN = KNN(3, pd.read_csv("iris.data.learning", header=None))
+#kNN.predict(getNumpyArrayFromCSV("iris.data.test")[:, 0:4])
+kNN.score(getNumpyArrayFromCSV("iris.data.test")[:, 0:4],getNumpyArrayFromCSV("iris.data.test")[:, 4])
+
