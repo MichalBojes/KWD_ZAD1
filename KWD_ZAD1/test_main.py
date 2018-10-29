@@ -63,9 +63,9 @@ class TestMain(unittest.TestCase):
         score2 = self.second.score(functions.getNumpyArrayFromCSV("iris.data.test")[:, 0:4],functions.getNumpyArrayFromCSV("iris.data.test")[:, 4], False)
         score3 = self.third.score(functions.getNumpyArrayFromCSV("iris.data.test")[:, 0:4],functions.getNumpyArrayFromCSV("iris.data.test")[:, 4],False)
 
-        self.assertEquals(93.33333333333333, score1)
-        self.assertEquals(93.33333333333333, score2)
-        self.assertEquals(93.33333333333333, score3)
+        self.assertEqual(93.33333333333333, score1)
+        self.assertEqual(93.33333333333333, score2)
+        self.assertEqual(93.33333333333333, score3)
 
     if __name__ == '__main__':
         unittest.main()
