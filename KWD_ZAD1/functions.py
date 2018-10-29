@@ -1,21 +1,28 @@
 import numpy as np
 import scipy.spatial.distance as sp
 import pandas as pd
+import test_main
+import unittest
+
 
 def getNumpyArrayFromCSV(nameOfFile):
     return np.array(pd.read_csv(nameOfFile, header=None))
+
+
 
 class KNN:
 
     def __init__(self, k, trainList):
         self.k=k
         self.trainList=np.array(trainList)
+        self.value = 0
 
-    def predict(self, testListData):
-        self.score= list()
+    def predict(self, testListData, if_print=True):
+        self.lista= list()
         self.distance= np.empty([len(testListData), len(self.trainList)], dtype=[('dist', float), ('label', 'U30')])
         for test in range (0, len(testListData), 1):
-            print("Punkt: %d" %test)
+            if if_print:
+                print("Punkt: %d" %test)
             for trained in range (0, len(self.trainList), 1):
                 self.distance[test][trained]=sp.euclidean(testListData[test], self.trainList[trained, 0:4]), self.trainList[trained, 4]
             self.tosort=np.array(self.distance[test], dtype=[('dist', float), ('label', 'U30'),])
@@ -28,24 +35,23 @@ class KNN:
                 else:
                     self.thisdict[self.tuple[1]]+=1
             self.sorteddict=sorted(self.thisdict, key=self.thisdict.__getitem__, reverse=True)
-            print(self.sorteddict[0])
-            self.score.append(self.sorteddict[0])
+            if if_print:
+                print(self.sorteddict[0])
+            self.lista.append(self.sorteddict[0])
             self.sorteddict.clear()
             self.thisdict.clear()
-        return(self.score)
+        return(self.lista)
 
-    def score(self,test_list_data, predicted_labels_list):
+    def score(self,test_list_data, predicted_labels_list, if_print=True):
         self.correctly=0
-        self.labels=self.predict(test_list_data)
+        self.labels=self.predict(test_list_data, False)
         for i in range (0,len(self.labels),1):
             if self.labels[i]==predicted_labels_list[i]:
                 self.correctly+=1
         self.procentage=self.correctly/len(predicted_labels_list)*100
-        print("poprawnie rozpoznano (sztuk): %d na %d" % (self.correctly, len(predicted_labels_list)))
-        print("poprawnie rozpoznano (w procentach): %d" %self.procentage )
+        if if_print:
+            print("poprawnie rozpoznano (sztuk): %d na %d" % (self.correctly, len(predicted_labels_list)))
+            print("poprawnie rozpoznano (w procentach): %d" %self.procentage )
         return self.procentage
 
-kNN = KNN(3, pd.read_csv("iris.data.learning", header=None))
-#kNN.predict(getNumpyArrayFromCSV("iris.data.test")[:, 0:4])
-kNN.score(getNumpyArrayFromCSV("iris.data.test")[:, 0:4],getNumpyArrayFromCSV("iris.data.test")[:, 4])
-
+ 
