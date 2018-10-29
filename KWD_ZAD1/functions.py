@@ -4,11 +4,8 @@ import pandas as pd
 import test_main
 import unittest
 
-
 def getNumpyArrayFromCSV(nameOfFile):
     return np.array(pd.read_csv(nameOfFile, header=None))
-
-
 
 class KNN:
 
@@ -53,5 +50,3 @@ class KNN:
             print("poprawnie rozpoznano (sztuk): %d na %d" % (self.correctly, len(predicted_labels_list)))
             print("poprawnie rozpoznano (w procentach): %d" %self.procentage )
         return self.procentage
-
- 

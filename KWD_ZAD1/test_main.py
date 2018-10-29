@@ -12,17 +12,14 @@ class TestMain(unittest.TestCase):
     def tearDownClass(cls):
         print('tearDownClass')
 
-
     def setUp(self):
         print('setUp')
         self.first = functions.KNN(3, pd.read_csv("iris.data.learning", header=None))
         self.second = functions.KNN(5, pd.read_csv("iris.data.learning", header=None))
         self.third = functions.KNN(7, pd.read_csv("iris.data.learning", header=None))
 
-
     def tearDown(self):
           print('tearDown')
-
 
     def testPredict(self):
         print('testing predict')
